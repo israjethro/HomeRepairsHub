@@ -20,25 +20,22 @@ const ROLE_PERMISSIONS = {
 };
 
 function json(data, status = 200, extraHeaders = {}) {
-  return new Response(JSON.stringify(data), {
-    status,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "Cache-Control": "no-store, private",
-      "X-Content-Type-Options": "nosniff",
-      "Referrer-Policy": "same-origin",
-      "X-Frame-Options": "DENY",
-      "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'",
-      ...Object.fromEntries(Object.entries(extraHeaders).filter(([, value]) => !Array.isArray(value)))
-    }
+  const headers = new Headers({
+    "Content-Type": "application/json; charset=utf-8",
+    "Cache-Control": "no-store, private",
+    "X-Content-Type-Options": "nosniff",
+    "Referrer-Policy": "same-origin",
+    "X-Frame-Options": "DENY",
+    "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'"
   });
-  for (const value of Object.values(extraHeaders)) {
+  for (const [name, value] of Object.entries(extraHeaders)) {
     if (Array.isArray(value)) {
-      // Cloudflare Workers supports multiple Set-Cookie header values via append.
-      for (const item of value) response.headers.append("Set-Cookie", item);
+      for (const item of value) headers.append(name, item);
+    } else {
+      headers.set(name, value);
     }
   }
-  return response;
+  return new Response(JSON.stringify(data), { status, headers });
 }
 
 function cookie(name, value, maxAge) {
