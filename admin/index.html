@@ -18,9 +18,9 @@
       </a>
       <div class="nav-label">WORKSPACE</div>
       <nav id="main-nav">
-        <button class="nav-item active" data-view="overview"><span>▦</span> Overview</button>
-        <button class="nav-item" data-view="users"><span>♙</span> Users & access</button>
-        <button class="nav-item" data-view="roles"><span>☷</span> Roles & permissions</button>
+        <button class="nav-item active" data-view="overview" data-permission="dashboard.read"><span>▦</span> Overview</button>
+        <button class="nav-item" data-view="users" data-permission="users.read"><span>♙</span> Users & access</button>
+        <button class="nav-item" data-view="roles" data-permission="roles.read"><span>☷</span> Roles & permissions</button>
         <div class="nav-label">SERVICE MODULES</div>
         <button class="nav-item future" data-view="bookings" disabled><span>▣</span> Bookings <em>Planned</em></button>
         <button class="nav-item future" data-view="orders" disabled><span>⇄</span> Orders & tracking <em>Planned</em></button>
@@ -28,7 +28,7 @@
         <button class="nav-item future" data-view="services" disabled><span>⚙</span> Services & catalogue <em>Planned</em></button>
         <button class="nav-item future" data-view="reports" disabled><span>▤</span> Reports <em>Planned</em></button>
         <div class="nav-label">SYSTEM</div>
-        <button class="nav-item" data-view="audit"><span>◷</span> Audit log</button>
+        <button class="nav-item" data-view="audit" data-permission="audit.read"><span>◷</span> Audit log</button>
       </nav>
       <div class="sidebar-bottom">
         <span class="status-dot"></span>
@@ -40,7 +40,7 @@
       <header class="topbar">
         <div class="mobile-brand"><span class="brand-mark">HRH</span><strong>HomeRepairHub</strong></div>
         <div class="breadcrumbs">Workspace <span>/</span> <strong id="page-crumb">Overview</strong></div>
-        <div class="topbar-right"><span class="environment-pill">ADMIN</span><div class="avatar" id="user-avatar">—</div><span id="user-name">Verifying identity</span></div>
+        <div class="topbar-right"><span class="environment-pill">ADMIN</span><div class="avatar" id="user-avatar">—</div><span id="user-name">Verifying identity</span><button id="logout-button" class="logout-button hidden" type="button">Sign out</button></div>
       </header>
 
       <section class="page" id="page-overview">
@@ -51,6 +51,17 @@
         <div id="access-banner" class="notice notice-warning" role="status">
           <span class="notice-icon">!</span><div><strong>Verifying secure access</strong><p>The portal will remain locked until the protected admin API confirms your identity and permissions.</p></div>
         </div>
+        <form id="login-form" class="panel login-panel hidden" autocomplete="on" novalidate>
+          <p class="eyebrow">SECURE ADMIN SIGN-IN</p><h2>Sign in to your admin account</h2>
+          <p class="panel-description">Use the email address and password registered with HomeRepairHub's authentication provider. Only approved admin accounts are allowed.</p>
+          <label for="login-email">Email address</label>
+          <input id="login-email" name="email" type="email" autocomplete="username" maxlength="254" required>
+          <label for="login-password">Password</label>
+          <input id="login-password" name="password" type="password" autocomplete="current-password" maxlength="1024" required>
+          <p id="login-error" class="login-error" role="alert" aria-live="polite"></p>
+          <button id="login-submit" type="submit" class="login-submit">Sign in securely</button>
+          <p class="login-help">Forgot your password? Use the configured provider's account recovery flow. Do not share your password or one-time codes.</p>
+        </form>
         <div class="stat-grid">
           <article class="stat-card"><div class="stat-top"><span>Active users</span><span class="stat-icon">♙</span></div><strong id="stat-users">—</strong><small>Loaded from the admin service</small></article>
           <article class="stat-card"><div class="stat-top"><span>Roles configured</span><span class="stat-icon">☷</span></div><strong id="stat-roles">—</strong><small>Role-based access control</small></article>
