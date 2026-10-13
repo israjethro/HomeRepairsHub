@@ -18,9 +18,9 @@
       </a>
       <div class="nav-label">WORKSPACE</div>
       <nav id="main-nav">
-        <button class="nav-item active" data-view="overview"><span>▦</span> Overview</button>
-        <button class="nav-item" data-view="users"><span>♙</span> Users & access</button>
-        <button class="nav-item" data-view="roles"><span>☷</span> Roles & permissions</button>
+        <button class="nav-item active" data-view="overview" data-permission="dashboard.read"><span>▦</span> Overview</button>
+        <button class="nav-item" data-view="users" data-permission="users.read"><span>♙</span> Users & access</button>
+        <button class="nav-item" data-view="roles" data-permission="roles.read"><span>☷</span> Roles & permissions</button>
         <div class="nav-label">SERVICE MODULES</div>
         <button class="nav-item future" data-view="bookings" disabled><span>▣</span> Bookings <em>Planned</em></button>
         <button class="nav-item future" data-view="orders" disabled><span>⇄</span> Orders & tracking <em>Planned</em></button>
@@ -28,7 +28,7 @@
         <button class="nav-item future" data-view="services" disabled><span>⚙</span> Services & catalogue <em>Planned</em></button>
         <button class="nav-item future" data-view="reports" disabled><span>▤</span> Reports <em>Planned</em></button>
         <div class="nav-label">SYSTEM</div>
-        <button class="nav-item" data-view="audit"><span>◷</span> Audit log</button>
+        <button class="nav-item" data-view="audit" data-permission="audit.read"><span>◷</span> Audit log</button>
       </nav>
       <div class="sidebar-bottom">
         <span class="status-dot"></span>
