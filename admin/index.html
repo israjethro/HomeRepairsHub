@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="referrer" content="same-origin">
+  <title>Admin Portal | HomeRepairHub</title>
+  <link rel="stylesheet" href="./admin.css">
+  <script src="./admin.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Admin navigation">
+      <a class="brand" href="./" aria-label="HomeRepairHub Admin home">
+        <span class="brand-mark">HRH</span>
+        <span><strong>HomeRepairHub</strong><small>ADMIN PORTAL</small></span>
+      </a>
+      <div class="nav-label">WORKSPACE</div>
+      <nav id="main-nav">
+        <button class="nav-item active" data-view="overview"><span>▦</span> Overview</button>
+        <button class="nav-item" data-view="users"><span>♙</span> Users & access</button>
+        <button class="nav-item" data-view="roles"><span>☷</span> Roles & permissions</button>
+        <div class="nav-label">SERVICE MODULES</div>
+        <button class="nav-item future" data-view="bookings" disabled><span>▣</span> Bookings <em>Planned</em></button>
+        <button class="nav-item future" data-view="orders" disabled><span>⇄</span> Orders & tracking <em>Planned</em></button>
+        <button class="nav-item future" data-view="technicians" disabled><span>♧</span> Technicians <em>Planned</em></button>
+        <button class="nav-item future" data-view="services" disabled><span>⚙</span> Services & catalogue <em>Planned</em></button>
+        <button class="nav-item future" data-view="reports" disabled><span>▤</span> Reports <em>Planned</em></button>
+        <div class="nav-label">SYSTEM</div>
+        <button class="nav-item" data-view="audit"><span>◷</span> Audit log</button>
+      </nav>
+      <div class="sidebar-bottom">
+        <span class="status-dot"></span>
+        <span><strong id="security-state">Checking access…</strong><small>Secure admin session</small></span>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="mobile-brand"><span class="brand-mark">HRH</span><strong>HomeRepairHub</strong></div>
+        <div class="breadcrumbs">Workspace <span>/</span> <strong id="page-crumb">Overview</strong></div>
+        <div class="topbar-right"><span class="environment-pill">ADMIN</span><div class="avatar" id="user-avatar">—</div><span id="user-name">Verifying identity</span></div>
+      </header>
+
+      <section class="page" id="page-overview">
+        <div class="page-heading">
+          <div><p class="eyebrow">CONTROL CENTRE</p><h1>Admin overview</h1><p class="subheading">Manage access today. Add service operations as each module is released.</p></div>
+          <span class="date-chip" id="today-label">HomeRepairHub</span>
+        </div>
+        <div id="access-banner" class="notice notice-warning" role="status">
+          <span class="notice-icon">!</span><div><strong>Verifying secure access</strong><p>The portal will remain locked until the protected admin API confirms your identity and permissions.</p></div>
+        </div>
+        <div class="stat-grid">
+          <article class="stat-card"><div class="stat-top"><span>Active users</span><span class="stat-icon">♙</span></div><strong id="stat-users">—</strong><small>Loaded from the admin service</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Roles configured</span><span class="stat-icon">☷</span></div><strong id="stat-roles">—</strong><small>Role-based access control</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Modules available</span><span class="stat-icon">▦</span></div><strong id="stat-modules">1</strong><small>Additional modules will be enabled after release</small></article>
+          <article class="stat-card"><div class="stat-top"><span>Recent security events</span><span class="stat-icon">◷</span></div><strong id="stat-events">—</strong><small>Audit API required</small></article>
+        </div>
+        <div class="content-grid">
+          <article class="panel"><div class="panel-heading"><div><h2>Access management</h2><p>Identity and permissions must be enforced by the server, not just the interface.</p></div><span class="panel-icon">♙</span></div>
+            <div class="feature-row"><div class="feature-icon">01</div><div><strong>User accounts</strong><p>Invite, activate, suspend and review staff access.</p></div><span class="tag tag-pending">Backend required</span></div>
+            <div class="feature-row"><div class="feature-icon">02</div><div><strong>Roles and permissions</strong><p>Grant module-level view, create, edit, assign, approve, export and delete permissions.</p></div><span class="tag tag-pending">Backend required</span></div>
+            <div class="feature-row"><div class="feature-icon">03</div><div><strong>Audit trail</strong><p>Record who changed access or performed a sensitive operation and when.</p></div><span class="tag tag-pending">Backend required</span></div>
+          </article>
+          <article class="panel roadmap"><div class="panel-heading"><div><h2>Platform roadmap</h2><p>Modules will be released incrementally.</p></div></div>
+            <div class="roadmap-step"><span class="step-number current">1</span><div><strong>Admin access foundation</strong><p>Authentication, roles, permissions and audit trail</p><span class="tag tag-current">Current phase</span></div></div>
+            <div class="roadmap-step"><span class="step-number">2</span><div><strong>Customer requests & bookings</strong><p>Capture requests and manage booking lifecycle</p></div></div>
+            <div class="roadmap-step"><span class="step-number">3</span><div><strong>Technician assignment</strong><p>Availability, assignment and job status</p></div></div>
+            <div class="roadmap-step"><span class="step-number">4</span><div><strong>Order tracking & reporting</strong><p>Status history, notifications and reports</p></div></div>
+          </article>
+        </div>
+        <p class="footnote">This is the initial portal interface. It does not grant access by itself; a protected Cloudflare Access setup and server-side authorization API must be configured before live use.</p>
+      </section>
+
+      <section class="page hidden" id="page-users">
+        <div class="page-heading"><div><p class="eyebrow">IDENTITY</p><h1>Users & access</h1><p class="subheading">Manage admin and staff identities through the secured admin service.</p></div></div>
+        <div class="panel"><div class="empty-state"><div class="empty-symbol">♙</div><h2>User management is not connected yet</h2><p>Account creation, suspension and role assignment must be backed by an authenticated API and persistent storage. This screen will not create fake or browser-only accounts.</p></div></div>
+      </section>
+
+      <section class="page hidden" id="page-roles">
+        <div class="page-heading"><div><p class="eyebrow">AUTHORIZATION</p><h1>Roles & permissions</h1><p class="subheading">Use least-privilege access for each HomeRepairHub module.</p></div></div>
+        <div class="panel"><h2>Planned permission model</h2><p class="panel-description">These are proposed role templates. They are not active until saved and enforced by the backend.</p>
+          <div class="table-wrap"><table><thead><tr><th>Role</th><th>Overview</th><th>Users & roles</th><th>Bookings</th><th>Orders</th><th>Technicians</th><th>Reports</th></tr></thead><tbody>
+          <tr><th>Super Admin</th><td><span class="permission full">Full</span></td><td><span class="permission full">Full</span></td><td><span class="permission full">Full</span></td><td><span class="permission full">Full</span></td><td><span class="permission full">Full</span></td><td><span class="permission full">Full</span></td></tr>
+          <tr><th>Operations Manager</th><td><span class="permission full">Full</span></td><td><span class="permission limited">View</span></td><td><span class="permission full">Full</span></td><td><span class="permission full">Full</span></td><td><span class="permission full">Full</span></td><td><span class="permission limited">View</span></td></tr>
+          <tr><th>Booking Agent</th><td><span class="permission limited">View</span></td><td><span class="permission none">None</span></td><td><span class="permission limited">Create/edit</span></td><td><span class="permission limited">View</span></td><td><span class="permission none">None</span></td><td><span class="permission none">None</span></td></tr>
+          <tr><th>Technician Coordinator</th><td><span class="permission limited">View</span></td><td><span class="permission none">None</span></td><td><span class="permission limited">View</span></td><td><span class="permission limited">Assign/update</span></td><td><span class="permission limited">Manage</span></td><td><span class="permission none">None</span></td></tr>
+          <tr><th>Read-only Auditor</th><td><span class="permission limited">View</span></td><td><span class="permission limited">View log</span></td><td><span class="permission limited">View</span></td><td><span class="permission limited">View</span></td><td><span class="permission limited">View</span></td><td><span class="permission limited">View</span></td></tr>
+          </tbody></table></div>
+          <p class="footnote">Recommended starting templates only. Final permissions should be confirmed before the authorization API is implemented.</p>
+        </div>
+      </section>
+
+      <section class="page hidden" id="page-audit">
+        <div class="page-heading"><div><p class="eyebrow">SECURITY</p><h1>Audit log</h1><p class="subheading">A traceable history of access changes and sensitive actions.</p></div></div>
+        <div class="panel"><div class="empty-state"><div class="empty-symbol">◷</div><h2>Audit log API required</h2><p>Events should be written server-side, with actor identity, action, target, timestamp and outcome. The browser must not be able to edit or delete audit events.</p></div></div>
+      </section>
+
+      <section class="page hidden" id="page-bookings"><div class="panel"><h2>Bookings</h2><p>This module will be enabled after booking workflows are designed and tested.</p></div></section>
+      <section class="page hidden" id="page-orders"><div class="panel"><h2>Orders & tracking</h2><p>This module will be enabled after order lifecycle and status history are implemented.</p></div></section>
+      <section class="page hidden" id="page-technicians"><div class="panel"><h2>Technicians</h2><p>This module will be enabled after technician profiles, availability and assignment are implemented.</p></div></section>
+      <section class="page hidden" id="page-services"><div class="panel"><h2>Services & catalogue</h2><p>This module will be enabled after service categories and pricing rules are defined.</p></div></section>
+      <section class="page hidden" id="page-reports"><div class="panel"><h2>Reports</h2><p>This module will be enabled after operational data and reporting permissions are implemented.</p></div></section>
+      <footer class="page-footer">HomeRepairHub · Admin Portal <span>Access must be enforced by the server</span></footer>
+    </main>
+  </div>
+  <noscript><div class="noscript">JavaScript is required to verify your admin session. Access remains unavailable without verification.</div></noscript>
+</body>
+</html>
