@@ -244,16 +244,16 @@ async function currentSession(request, cfg) {
 async function logout(request, cfg) {
   if (!sameOrigin(request)) return json({ error: "Invalid request origin" }, 403);
   const accessToken = getCookie(request, ACCESS_COOKIE);
+  const actor = accessToken ? await providerUser(cfg, accessToken) : null;
+  if (actor) await audit(cfg, actor, "auth.logout", "success", request);
   if (accessToken) {
     await supabaseFetch(cfg, "/auth/v1/logout", {
       method: "POST",
       headers: { "Authorization": `Bearer ${accessToken}` }
     }).catch(() => null);
   }
-  const actor = accessToken ? await providerUser(cfg, accessToken) : null;
-  if (actor) await audit(cfg, actor, "auth.logout", "success", request);
   return json({ ok: true }, 200, {
-    "Set-Cookie": clearCookie(ACCESS_COOKIE) + ", " + clearCookie(REFRESH_COOKIE)
+    "Set-Cookie": [clearCookie(ACCESS_COOKIE), clearCookie(REFRESH_COOKIE)]
   });
 }
 
