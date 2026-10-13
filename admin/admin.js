@@ -47,7 +47,7 @@
     button.addEventListener("click", () => {
       if (button.disabled) return;
       const required = button.dataset.permission;
-      if (required && !window.__HRH_SESSION) return;
+      if (!window.__HRH_SESSION) return;
       if (required && !hasPermission(window.__HRH_SESSION, required)) {
         showLocked("Permission denied", "Your account does not have permission to open this section.");
         return;
