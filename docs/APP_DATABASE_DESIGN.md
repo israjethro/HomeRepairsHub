@@ -10,13 +10,12 @@ Spare parts can be sold independently or linked to a repair booking. A repair bo
 
 ## 2. Roles
 
-- Customer: manage profile and addresses, create bookings, browse parts, wishlist/cart, place orders, pay, track, and leave feedback.
-- Technician: manage work availability and skills, view assigned jobs, submit diagnoses and parts requirements, update job progress, and record parts used.
-- Accountant: view permitted payment, refund, expense, and reconciliation records; no access to authentication secrets or technician/customer administration by default.
-- Admin: manage catalogue, users/roles, technicians, bookings, orders, stock, configuration, audit records, and operational reports.
-- Optional inventory/operations staff role may be added later with restricted stock/order permissions.
+- Customer: manage their own profile and addresses, create bookings, browse parts, manage wishlist/cart, place orders, pay, track, and leave feedback within allowed rules.
+- Technician: access assigned jobs and only the technician functions explicitly granted by an Admin.
+- Accountant: access finance functions only when explicitly granted by an Admin; cannot grant, change, or revoke access or permissions.
+- Admin: the only role permitted to grant, change, or revoke roles and permissions, activate/deactivate accounts, and configure access to every module, including finance. Admin also manages catalogue, technicians, bookings, orders, stock, configuration, audit records, and operational reports.
 
-Authorization must be enforced server-side for every protected route and record, not just by hiding UI elements.
+All access grants must be performed through Admin-controlled workflows and enforced server-side on every protected route and record. No customer, technician, or accountant can elevate their own privileges, assign roles, or modify permission records. Hiding UI elements is not authorization.
 
 ## 3. Logical database schema
 
@@ -28,6 +27,7 @@ Use UUID primary keys, UTC timestamps, foreign keys, unique constraints, and exp
 - user_addresses: id, user_id -> profiles.id, label, recipient_name, phone, address_line1, address_line2, locality, city, state, postal_code, is_default, created_at.
 - role_assignments: id, user_id, role (customer/technician/accountant/admin), status, created_at, created_by. Do not accept role changes from customer-facing clients.
 - admin_users (if retained for the existing admin-auth design): auth_user_id, email, role, status, created_at, updated_at. Avoid maintaining two conflicting sources of truth for roles; document which table is authoritative before implementation.
+- role_assignments / permission_assignments: changes may be made only by a verified Admin through a protected server-side endpoint; log actor, target, old/new values, timestamp, and reason in an append-only audit trail. Reject self-escalation and unauthorized changes.
 
 ### Catalogue and inventory
 
@@ -82,7 +82,7 @@ A linked repair-parts order should have linked_booking_id populated. Independent
 - accounting_entries: id, entry_type, source_type, source_id, debit_minor, credit_minor, currency, entry_date, created_by, created_at. Append corrections/reversals instead of silently editing posted entries.
 - finance_audit_log: id, actor_id, action, entity_type, entity_id, metadata_redacted, created_at.
 
-Do not store raw card details. Use a payment provider and store only provider references and safe transaction metadata. Keep accountant permissions read/write-limited to finance functions.
+Do not store raw card details. Use a payment provider and store only provider references and safe transaction metadata. The Admin alone grants or revokes accountant access and any finance permissions; accountants cannot administer roles or permissions. Apply least privilege to each granted finance action and record permission changes in the audit trail.
 
 ### Feedback and audit
 
@@ -109,7 +109,7 @@ Do not store raw card details. Use a payment provider and store only provider re
 6. A technician cannot be assigned to overlapping jobs; re-check availability inside the assignment transaction.
 7. Record status transitions in history tables and validate allowed transitions server-side.
 8. Never trust client-submitted totals, role values, stock quantities, or payment success claims.
-9. Use row-level security or equivalent server-side authorization for customer-owned records. Admin and accountant access must be narrowly scoped.
+9. Use row-level security or equivalent server-side authorization for customer-owned records. The Admin is the sole authority for granting/revoking access and permissions; all other roles are restricted to Admin-granted capabilities.
 10. Keep staging and production credentials, databases, storage buckets, payment credentials, and webhook secrets separate.
 
 ## 6. Suggested API surface
@@ -122,10 +122,10 @@ Do not store raw card details. Use a payment provider and store only provider re
 - Technician: /api/technician/availability, /api/technician/assignments, /api/technician/jobs/:id/status
 - Tracking: /api/tracking/orders/:id, /api/tracking/bookings/:id
 - Feedback: /api/feedback
-- Finance: /api/accountant/payments, /api/accountant/refunds, /api/accountant/expenses, /api/accountant/reports
-- Admin: /api/admin/*
+- Finance: /api/finance/* (access limited by permissions explicitly granted by Admin)
+- Admin: /api/admin/* including protected role/permission management endpoints
 
-Every endpoint must check identity, role, ownership, input validity, and allowed state transitions on the server.
+Every endpoint must check identity, role, ownership, input validity, allowed state transitions, and the Admin-granted permission on the server. Non-admin calls to grant/change/revoke permissions must be rejected and audited.
 
 ## 7. Delivery phases
 
@@ -135,7 +135,7 @@ Every endpoint must check identity, role, ownership, input validity, and allowed
 4. Parts sales: wishlist, cart, checkout, order snapshots, payment integration in test mode, shipment/return lifecycle.
 5. Service operations: bookings, technician skills/availability, assignments, diagnosis, estimates, linked parts and stock usage.
 6. Customer experience: account page, My Orders, booking tracking, notifications, feedback.
-7. Finance and admin: accountant permissions, refunds, expenses, reconciliation, dashboards.
+7. Finance and admin: Admin-controlled role/permission management, accountant finance access only when granted by Admin, refunds, expenses, reconciliation, dashboards, and audit review.
 8. QA and release: functional, API, authorization, concurrency, payment idempotency, stock integrity, accessibility, responsive, backup/restore, and staging regression tests.
 
 ## 8. Staging and production release gate
