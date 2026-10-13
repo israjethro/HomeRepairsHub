@@ -29,9 +29,16 @@ function json(data, status = 200, extraHeaders = {}) {
       "Referrer-Policy": "same-origin",
       "X-Frame-Options": "DENY",
       "Content-Security-Policy": "default-src 'none'; frame-ancestors 'none'",
-      ...extraHeaders
+      ...Object.fromEntries(Object.entries(extraHeaders).filter(([, value]) => !Array.isArray(value)))
     }
   });
+  for (const value of Object.values(extraHeaders)) {
+    if (Array.isArray(value)) {
+      // Cloudflare Workers supports multiple Set-Cookie header values via append.
+      for (const item of value) response.headers.append("Set-Cookie", item);
+    }
+  }
+  return response;
 }
 
 function cookie(name, value, maxAge) {
@@ -192,8 +199,10 @@ async function login(request, cfg) {
 
   await audit(cfg, admin, "auth.login", "success", request);
   return json({ ok: true }, 200, {
-    "Set-Cookie": cookie(ACCESS_COOKIE, tokens.accessToken, tokens.expiresIn) + ", " +
+    "Set-Cookie": [
+      cookie(ACCESS_COOKIE, tokens.accessToken, tokens.expiresIn),
       cookie(REFRESH_COOKIE, tokens.refreshToken, 60 * 60 * 24 * 14)
+    ]
   });
 }
 
@@ -213,7 +222,7 @@ async function currentSession(request, cfg) {
 
   if (!user) {
     return json({ authenticated: false }, 401, {
-      "Set-Cookie": clearCookie(ACCESS_COOKIE) + ", " + clearCookie(REFRESH_COOKIE)
+      "Set-Cookie": [clearCookie(ACCESS_COOKIE), clearCookie(REFRESH_COOKIE)]
     });
   }
 
@@ -221,14 +230,16 @@ async function currentSession(request, cfg) {
   if (!admin) {
     await audit(cfg, user, "auth.session", "denied", request);
     return json({ authenticated: false }, 403, {
-      "Set-Cookie": clearCookie(ACCESS_COOKIE) + ", " + clearCookie(REFRESH_COOKIE)
+      "Set-Cookie": [clearCookie(ACCESS_COOKIE), clearCookie(REFRESH_COOKIE)]
     });
   }
 
   const headers = {};
   if (refreshed) {
-    headers["Set-Cookie"] = cookie(ACCESS_COOKIE, refreshed.accessToken, refreshed.expiresIn) + ", " +
-      cookie(REFRESH_COOKIE, refreshed.refreshToken, 60 * 60 * 24 * 14);
+    headers["Set-Cookie"] = [
+      cookie(ACCESS_COOKIE, refreshed.accessToken, refreshed.expiresIn),
+      cookie(REFRESH_COOKIE, refreshed.refreshToken, 60 * 60 * 24 * 14)
+    ];
   }
   return json(sessionPayload(admin), 200, headers);
 }
