@@ -10,11 +10,11 @@ const HEADERS = [
 function doPost(e) {
   try {
     const params = (e && e.parameter) || {};
-    const data = JSON.parse(params.payload || '{}');
+    const data = JSON.parse(params.payload || '{}');\n    requestId = String(data.requestId || '');
 
     // Honeypot: silently accept bot submissions without storing them.
     if (String(params.website || data.website || '').trim()) {
-      return response_({ type: 'hrh-sheet-result', ok: true });
+      return response_({ type: 'hrh-sheet-result', ok: true, requestId });
     }
 
     const required = ['name', 'phone', 'appliances', 'warranty', 'problem', 'zone', 'area', 'pin', 'fullAddress', 'preferredTime'];
@@ -39,7 +39,7 @@ function doPost(e) {
       }
 
       let sheet = spreadsheet.getSheetByName(SHEET_NAME);
-      if (!sheet) sheet = spreadsheet.insertSheet(SHEET_NAME);
+      if (!sheet) {\n        const existing = spreadsheet.getSheets();\n        if (existing.length === 1 && existing[0].getLastRow() === 0) { sheet = existing[0]; sheet.setName(SHEET_NAME); }\n        else sheet = spreadsheet.insertSheet(SHEET_NAME);\n      }
       if (sheet.getLastRow() === 0) {
         sheet.appendRow(HEADERS);
         sheet.setFrozenRows(1);
@@ -65,7 +65,7 @@ function doPost(e) {
       lock.releaseLock();
     }
 
-    return response_({ type: 'hrh-sheet-result', ok: true });
+    return response_({ type: 'hrh-sheet-result', ok: true, requestId });
   } catch (err) {
     console.error(err && err.stack ? err.stack : err);
     return response_({
@@ -91,7 +91,7 @@ function safeCell_(value) {
 function response_(message) {
   const encoded = JSON.stringify(message).replace(/</g, '\\u003c');
   const html = '<!doctype html><html><head><meta charset="utf-8"></head><body><script>' +
-    'window.parent.postMessage(' + encoded + ', "*");' +
+    'window.top.postMessage(' + encoded + ', "*");' +
     '</script><p>Enquiry response processed.</p></body></html>';
   return HtmlService.createHtmlOutput(html)
     .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
