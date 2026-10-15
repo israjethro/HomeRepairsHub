@@ -8,9 +8,11 @@ const HEADERS = [
 ];
 
 function doPost(e) {
+  let requestId = '';
   try {
     const params = (e && e.parameter) || {};
-    const data = JSON.parse(params.payload || '{}');\n    requestId = String(data.requestId || '');
+    const data = JSON.parse(params.payload || '{}');
+    requestId = String(data.requestId || '');\n    requestId = String(data.requestId || '');
 
     // Honeypot: silently accept bot submissions without storing them.
     if (String(params.website || data.website || '').trim()) {
@@ -70,6 +72,7 @@ function doPost(e) {
     console.error(err && err.stack ? err.stack : err);
     return response_({
       type: 'hrh-sheet-result',
+      requestId,
       ok: false,
       message: 'Google Sheets could not save this enquiry. Please try again in a moment.'
     });
