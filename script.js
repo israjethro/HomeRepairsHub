@@ -13,7 +13,7 @@ const form=document.getElementById('booking-form');
 const storageConfig=window.HOME_REPAIR_CONFIG||{};
 const storageNotice=document.getElementById('form-disclaimer');
 if(storageNotice&&/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec(?:\?.*)?$/.test(String(storageConfig.googleSheetsEndpoint||''))){
- storageNotice.textContent='Your enquiry is saved to our customer enquiry sheet before confirmation. WhatsApp is an additional notification.';
+ storageNotice.textContent='Your enquiry is saved to our customer enquiry sheet. We’ll contact you to confirm availability, price and terms before you decide. There’s no obligation to proceed and no payment is collected through this form.';
 }
 const brandChoices=['A.O. Smith','Blue Star','Bosch','Carrier','Daikin','Godrej','Haier','Hitachi','IFB','LG','Mi / Xiaomi','Onida','Panasonic','Samsung','Voltas','Whirlpool'];
 function selectedAppliances(){return [...form.querySelectorAll('input[name="appliances"]:checked')].map(x=>x.value);}
