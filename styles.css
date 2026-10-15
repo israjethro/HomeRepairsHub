@@ -87,3 +87,35 @@
 .floating-enquiry-icon{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#ffffff25;font-size:18px}
 .floating-whatsapp.floating-enquiry:hover{transform:translateY(-2px);box-shadow:0 16px 34px #e94f0b50}
 @media(max-width:680px){.brand img{width:58px;height:50px}.footer-brand img{width:72px;height:58px}.appliance-banner{border-radius:12px}.area-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.area-card{padding:12px}.coverage-cta{padding:15px;align-items:stretch}.coverage-cta a{justify-content:center}.mic-row{padding:11px}.floating-whatsapp.floating-enquiry{right:12px;bottom:12px;padding:11px 15px;font-size:12px}}
+
+
+/* Final brand refresh: finalized HRH mark, bright header and a clearer appliance hero */
+.site-header{background:#fff;color:var(--navy);border-bottom:1px solid #dfe5e7;box-shadow:0 3px 18px #10253608}
+.site-header .brand img{width:86px;height:60px;object-fit:contain;border-radius:0;background:transparent}
+.brand-copy b{color:var(--navy)}
+.brand-copy b span{color:var(--orange)}
+.brand-copy small{color:#60717c}
+nav{color:#334a5b}
+nav a:hover{color:#b65b12}
+.nav-cta{color:#10202c!important}
+.menu-toggle{color:var(--navy)}
+.hero{background:#f7f9f8;color:var(--navy)}
+.hero:before{background:radial-gradient(ellipse at 82% 42%,#e9f0f2 0,transparent 48%),linear-gradient(120deg,#fff 0%,#f4f7f7 100%)}
+.hero h1{color:#102536}
+.hero-content>p{color:#586b78}
+.hero-points{color:#506472}
+.btn-outline{border-color:#9baab2;color:var(--navy)}
+.hero-bottom{border-top-color:#d7e0e3;color:#6e818d}
+.appliance-banner{border-radius:18px;box-shadow:0 20px 50px #102b4015}
+.footer-brand img{width:94px;height:66px;object-fit:contain;background:#fff;padding:3px;border-radius:6px}
+.honeypot{position:absolute!important;left:-10000px!important;top:auto!important;width:1px!important;height:1px!important;overflow:hidden!important}
+.form-disclaimer{font-size:10px}
+@media(max-width:680px){
+ .site-header .brand img{width:64px;height:48px}
+ nav{background:#fff;color:var(--navy);box-shadow:0 12px 22px #10253612}
+ nav a{color:var(--navy)}
+ .hero{background:#f7f9f8}
+ .hero:before{background:linear-gradient(160deg,#fff,#f0f5f6)}
+ .hero-bottom{color:#6e818d}
+ .footer-brand img{width:78px;height:58px}
+}
