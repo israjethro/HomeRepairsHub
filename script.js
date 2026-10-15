@@ -13,7 +13,7 @@ const form=document.getElementById('booking-form');
 const storageConfig=window.HOME_REPAIR_CONFIG||{};
 const storageNotice=document.getElementById('form-disclaimer');
 if(storageNotice&&/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec(?:\?.*)?$/.test(String(storageConfig.googleSheetsEndpoint||''))){
- storageNotice.textContent='Your enquiry is saved to our customer enquiry sheet. We’ll contact you to confirm availability, price and terms before you decide. There’s no obligation to proceed and no payment is collected through this form.';
+ storageNotice.textContent='Your valuable enquiry is received. We’ll contact you to confirm availability, price and terms before you decide. There’s no obligation to proceed and no payment is collected through this form.';
 }
 const brandChoices=['A.O. Smith','Blue Star','Bosch','Carrier','Daikin','Godrej','Haier','Hitachi','IFB','LG','Mi / Xiaomi','Onida','Panasonic','Samsung','Voltas','Whirlpool'];
 function selectedAppliances(){return [...form.querySelectorAll('input[name="appliances"]:checked')].map(x=>x.value);}
@@ -99,14 +99,14 @@ form.addEventListener('submit',async e=>{
  const whatsappWindow=window.open('about:blank','_blank');
  postEnquiryToSheet(endpoint,record,(result)=>{
   form.classList.add('submitted');document.getElementById('thank-you-screen').hidden=false;
-  status.textContent='Enquiry saved successfully to the customer sheet.';
+  status.textContent='Your valuable enquiry is received.';
   const small=document.querySelector('.thank-small');
-  small.innerHTML='Your details are saved. WhatsApp is an additional notification; press <b>Send</b> in the new tab to message our team.';
+  small.innerHTML='Your valuable enquiry is received. WhatsApp is an additional notification; press <b>Send</b> in the new tab to message our team.';
   if(whatsappWindow){
    const msg=[`HomeRepairsHub — ${headline}`,`Submitted on: ${new Date(submittedAt).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'})}`,`Customer name: ${record.name}`,`Customer mobile: ${record.phone}`,`Appliance(s): ${record.appliances}`,`Brand(s): ${record.brands}`,`Warranty status: ${record.warranty}`,`Warranty confirmation: ${record.warrantyConfirmation}`,`Fault / request: ${record.problem}`,`Service zone: ${record.zone}`,`Area: ${record.area}`,`PIN code: ${record.pin}`,`Full service address: ${record.fullAddress}`,`Preferred visit time: ${record.preferredTime}`].join('\n');
    whatsappWindow.location.href=`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
   }else{
-   status.textContent='Enquiry saved successfully. Your browser blocked the WhatsApp tab; you can still contact our team separately.';
+   status.textContent='Your valuable enquiry is received. Your browser blocked the WhatsApp tab; you can still call our team separately.';
   }
   document.getElementById('thank-you-screen').scrollIntoView({behavior:'smooth',block:'center'});
  },(message)=>{
