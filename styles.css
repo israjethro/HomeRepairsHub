@@ -186,3 +186,35 @@ footer .brand-copy small{color:#526b79}
  .floating-enquiry-icon{width:25px;height:25px;flex-basis:25px}
  .floating-enquiry-icon svg{width:16px;height:16px}
 }
+
+
+/* Direct-call CTAs and photo-led service sections */
+.nav-call-cta{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 14px;border-radius:999px;background:#102f4b;color:#fff!important;font-size:11px;font-weight:800;white-space:nowrap}
+.nav-call-cta:hover{background:#e65c0b;color:#fff!important}
+.hero-actions{flex-wrap:wrap;gap:10px}
+.hero-actions .btn-outline{background:#fff}
+.technician-mark>img{width:100%;max-width:390px;height:auto;aspect-ratio:420/260;object-fit:contain;background:transparent;border-radius:0;margin:0 0 18px}
+.spares-feature-image img{aspect-ratio:3/2;object-fit:cover}
+.spares-cta-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.spares-cta-row .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px}
+.contact-call-panel{display:grid;gap:8px;margin-top:22px;padding:18px;border:1px solid #ffffff35;border-radius:12px;background:#ffffff0d}
+.contact-call-panel>b{font-size:13px;color:#fff}
+.contact-call-panel>span{font-size:11px;color:#d6e2e8}
+.contact-call-panel .btn{justify-self:start;display:inline-flex;align-items:center;gap:9px;margin-top:5px}
+.footer-cta-row{display:flex;flex-wrap:wrap;gap:10px}
+.footer-cta-row .footer-link{display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.footer-call-link{background:#e65c0b!important;color:#fff!important}
+.footer-call-link:hover{background:#c64a06!important}
+@media(max-width:900px){
+ .nav-call-cta{padding:11px 14px}
+}
+@media(max-width:680px){
+ .nav-call-cta{width:100%;border-radius:8px;justify-content:center;padding:12px}
+ .hero-actions{display:grid;grid-template-columns:1fr;align-items:stretch}
+ .hero-actions .btn{width:100%;justify-content:center;gap:9px}
+ .spares-cta-row{display:grid;grid-template-columns:1fr;width:100%}
+ .spares-cta-row .btn{width:100%;min-height:48px;white-space:normal;line-height:1.45}
+ .contact-call-panel .btn{width:100%;justify-content:center}
+ .footer-cta-row{display:grid;grid-template-columns:1fr;width:100%}
+ .footer-cta-row .footer-link{width:100%;min-height:46px}
+}
