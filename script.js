@@ -26,13 +26,15 @@ else{micButton.addEventListener('click',()=>{const recognition=new SpeechRecogni
 document.getElementById('new-enquiry').addEventListener('click',()=>{form.classList.remove('submitted');document.getElementById('thank-you-screen').hidden=true;form.reset();document.getElementById('form-heading').textContent='Repair enquiry';form.dataset.intent='repair';document.getElementById('form-status').textContent='';updateFormHeading();});
 async function postEnquiryToSheet(endpoint, record, onSuccess, onFailure){
  const frame=document.createElement('iframe');
- const requestId=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():String(Date.now())+'-'+Math.random().toString(36).slice(2);\n frame.name='hrh-sheet-response-'+requestId;
+ const requestId=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():String(Date.now())+'-'+Math.random().toString(36).slice(2);
+ frame.name='hrh-sheet-response-'+requestId;
  frame.title='Customer enquiry storage response';
  frame.hidden=true;
  document.body.appendChild(frame);
  const postForm=document.createElement('form');
  postForm.method='POST';postForm.action=endpoint;postForm.target=frame.name;postForm.hidden=true;
- record.requestId=requestId;\n const payload=document.createElement('input');payload.type='hidden';payload.name='payload';payload.value=JSON.stringify(record);
+ record.requestId=requestId;
+ const payload=document.createElement('input');payload.type='hidden';payload.name='payload';payload.value=JSON.stringify(record);
  const trap=document.createElement('input');trap.type='hidden';trap.name='website';trap.value='';
  postForm.append(payload,trap);document.body.appendChild(postForm);
  let finished=false;
