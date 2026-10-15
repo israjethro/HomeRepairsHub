@@ -62,3 +62,28 @@
 .contact-copy{position:sticky;top:120px}
 @media(max-width:900px){.footer-bottom{padding-right:190px}.contact-section{grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:28px}.booking-form{padding:24px}}
 @media(max-width:680px){.footer-bottom{padding-right:0;padding-bottom:68px}.policy-section{padding:38px 22px}.policy-card{padding:22px 18px}.contact-section{grid-template-columns:1fr;gap:28px}.contact-copy{position:static}.contact-section .contact-copy,.contact-section .booking-form{grid-column:1/-1}.booking-form{padding:22px 16px}}
+
+/* HomeRepairsHub brand refresh — staging-only */
+.brand img{width:76px;height:62px;object-fit:contain;flex-shrink:0}
+.footer-brand img{width:88px;height:70px}
+.brand-copy b span{color:var(--orange)}
+.hero-art{position:relative;display:flex;align-items:center;justify-content:center;min-height:0;padding:0;background:transparent;overflow:visible}
+.appliance-banner{display:block;width:100%;height:auto;max-height:440px;object-fit:contain;border-radius:18px;box-shadow:0 18px 46px #102b4014}
+.area-grid{grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:12px}
+.area-card{min-width:0;padding:14px 15px;border-radius:10px}
+.area-card b{font-size:14px}
+.area-card span{font-size:11px}
+.area-card a{font-size:11px}
+.coverage-cta{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:24px;padding:18px 22px;border:1px solid #ffd3b7;border-radius:14px;background:linear-gradient(110deg,#fff7f0,#fff);box-shadow:0 8px 24px #102b4009}
+.coverage-cta>span{font-size:14px;font-weight:700;color:var(--ink)}
+.coverage-cta a{display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border-radius:999px;background:var(--orange);color:#fff!important;font-size:13px;font-weight:800;box-shadow:0 8px 20px #e94f0b2b}
+.mic-row{display:flex;align-items:flex-start;gap:12px;margin-top:10px;padding:13px 14px;border:1px solid #e4eaf0;border-radius:10px;background:#f8fafc}
+.mic-button{width:46px;height:46px;min-width:46px;display:grid;place-items:center;padding:0;border:0;border-radius:50%;background:var(--orange);color:#fff;box-shadow:0 4px 12px #e94f0b25}
+.mic-button svg{width:22px;height:22px}
+.mic-copy{display:flex;flex-direction:column;gap:4px;min-width:0}
+.mic-copy b{font-size:12px;color:var(--ink)}
+.mic-copy small{font-size:11px;line-height:1.55;color:var(--muted)}
+.floating-whatsapp.floating-enquiry{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;padding:15px 21px;border:1px solid #fff7;border-radius:999px;background:linear-gradient(120deg,#e94f0b,#ff7a1a);box-shadow:0 12px 30px #e94f0b45;color:#fff!important;font-size:13px;font-weight:800;letter-spacing:.1px;z-index:50}
+.floating-enquiry-icon{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:#ffffff25;font-size:18px}
+.floating-whatsapp.floating-enquiry:hover{transform:translateY(-2px);box-shadow:0 16px 34px #e94f0b50}
+@media(max-width:680px){.brand img{width:58px;height:50px}.footer-brand img{width:72px;height:58px}.appliance-banner{border-radius:12px}.area-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.area-card{padding:12px}.coverage-cta{padding:15px;align-items:stretch}.coverage-cta a{justify-content:center}.mic-row{padding:11px}.floating-whatsapp.floating-enquiry{right:12px;bottom:12px;padding:11px 15px;font-size:12px}}
