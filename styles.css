@@ -119,3 +119,70 @@ nav a:hover{color:#b65b12}
  .hero-bottom{color:#6e818d}
  .footer-brand img{width:78px;height:58px}
 }
+
+
+/* Spares installation feature, appliance imagery, accessible brand selection and footer contrast */
+.service-card-image{display:block;width:100%;height:124px;object-fit:contain;object-position:center;background:#f6f8f8;border-radius:8px;margin:0 0 17px;padding:8px}
+.service-card .service-icon{margin-bottom:14px}
+.spares-feature{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:clamp(30px,6vw,80px);padding:88px clamp(24px,8vw,125px);background:#fff8f1;border-top:1px solid #f4e5d8;border-bottom:1px solid #f4e5d8}
+.spares-feature-image img{display:block;width:100%;height:auto;border-radius:18px;box-shadow:0 18px 45px #10253612}
+.spares-feature-copy h2{font-size:clamp(32px,3.7vw,46px);line-height:1.14;letter-spacing:-1.7px;margin:14px 0 18px;color:var(--navy)}
+.spares-feature-copy h2 em{font-style:normal;color:#c3540b}
+.spares-feature-copy>p{font-size:12px;line-height:1.9;color:#536573}
+.spares-benefits{list-style:none;margin:22px 0;padding:0;display:grid;gap:12px}
+.spares-benefits li{display:flex;align-items:flex-start;gap:10px;font-size:12px;font-weight:700;color:#243b4a}
+.spares-benefits li span{display:inline-grid;place-items:center;flex:0 0 22px;height:22px;border-radius:50%;background:#ffead9;color:#b84d05;font-size:13px}
+.spares-feature-copy .spares-small{font-size:10px;color:#6b7a83;margin:16px 0 22px}
+.technician-mark>img{display:block;width:min(100%,220px);height:140px;object-fit:contain;border-radius:10px;background:#f4f7f8;margin:0 0 18px}
+.brand-picker{border:1px solid #dbe0e1;padding:13px 14px 15px;margin:0 0 16px;min-width:0}
+.brand-picker legend{font-size:10px;font-weight:800;padding:0 5px}
+.brand-picker legend small{display:inline-block;font-size:9px;color:var(--muted);font-weight:500;margin-left:6px}
+.brand-picker-help{font-size:11px;color:var(--muted);margin:4px 0}
+.brand-groups{display:grid;gap:14px}
+.brand-appliance-group{border:1px solid #e2e7e8;border-radius:8px;padding:10px;margin:0;min-width:0}
+.brand-appliance-group legend{font-size:11px;font-weight:800;padding:0 5px;color:#304756}
+.brand-check-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.brand-check-option{display:flex!important;align-items:center;gap:6px;margin:0!important;padding:7px 6px;border:1px solid #e3e8e9;border-radius:5px;font-size:10px!important;min-width:0;cursor:pointer}
+.brand-check-option input{width:14px;height:14px;flex:0 0 14px;margin:0;accent-color:var(--orange)}
+.brand-check-option span{font-size:10px;font-weight:600;overflow-wrap:anywhere}
+.brand-check-option:has(input:checked){border-color:var(--orange);background:#fff6ed}
+.booking-form .form-disclaimer{padding:12px 14px;border-left:3px solid #2f7b62;background:#f1f8f4;border-radius:0 7px 7px 0;color:#315b4c;font-size:10px;line-height:1.8}
+.submit-btn{min-height:52px;letter-spacing:.1px}
+footer{background:#f0f4f5;color:#172c3b;border-top:1px solid #dce5e8}
+.footer-main{border-bottom:1px solid #d7e1e4}
+footer .brand-copy b{color:#102f4b}
+footer .brand-copy b span{color:#df5e0a}
+footer .brand-copy small{color:#526b79}
+.footer-main>p{color:#516774}
+.footer-link{color:#b64e08}
+.footer-bottom{border-top:0;color:#5c707c}
+.footer-bottom a{color:#304b5b}
+.floating-whatsapp.floating-enquiry{max-width:calc(100vw - 24px);white-space:normal;gap:8px}
+.floating-enquiry-icon{flex:0 0 28px;margin:0!important}
+.floating-enquiry-icon svg{display:block}
+@media(max-width:900px){
+ .spares-feature{padding:70px 5vw;gap:30px}
+ .brand-check-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:680px){
+ .service-card-image{height:100px;padding:5px;margin-bottom:12px}
+ .spares-feature{grid-template-columns:1fr;padding:60px 22px;gap:25px}
+ .spares-feature-image img{max-height:270px;object-fit:contain}
+ .spares-feature-copy h2{font-size:34px;letter-spacing:-1.2px}
+ .spares-feature-copy .btn{width:100%;gap:10px;padding:14px 12px;font-size:11px}
+ .technician-mark>img{height:125px;width:100%;max-width:220px}
+ .brand-picker legend small{display:block;margin:4px 0 0}
+ .brand-check-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .brand-check-option{padding:8px 6px}
+ .brand-check-option span{font-size:10px}
+ footer{padding:34px 22px 20px}
+ .footer-main{display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding-bottom:24px}
+ .footer-brand{min-width:0}
+ .footer-main>p{margin:4px 0 8px;max-width:none}
+ .footer-link{margin:0;padding:12px 15px;background:#102f4b;color:#fff;border-radius:8px;display:inline-flex;align-items:center;gap:8px}
+ .footer-link span{display:inline-block}
+ .footer-bottom{line-height:1.9;display:grid;gap:6px}
+ .floating-whatsapp.floating-enquiry{left:12px;right:12px;bottom:12px;width:calc(100vw - 24px);justify-content:center;white-space:nowrap;padding:10px 12px;font-size:12px;gap:8px}
+ .floating-enquiry-icon{width:25px;height:25px;flex-basis:25px}
+ .floating-enquiry-icon svg{width:16px;height:16px}
+}
