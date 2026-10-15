@@ -12,7 +12,7 @@ function doPost(e) {
   try {
     const params = (e && e.parameter) || {};
     const data = JSON.parse(params.payload || '{}');
-    requestId = String(data.requestId || '');\n    requestId = String(data.requestId || '');
+    requestId = String(data.requestId || '');
 
     // Honeypot: silently accept bot submissions without storing them.
     if (String(params.website || data.website || '').trim()) {
