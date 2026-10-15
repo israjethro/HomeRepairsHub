@@ -41,7 +41,11 @@ function doPost(e) {
       }
 
       let sheet = spreadsheet.getSheetByName(SHEET_NAME);
-      if (!sheet) {\n        const existing = spreadsheet.getSheets();\n        if (existing.length === 1 && existing[0].getLastRow() === 0) { sheet = existing[0]; sheet.setName(SHEET_NAME); }\n        else sheet = spreadsheet.insertSheet(SHEET_NAME);\n      }
+      if (!sheet) {
+        const existing = spreadsheet.getSheets();
+        if (existing.length === 1 && existing[0].getLastRow() === 0) { sheet = existing[0]; sheet.setName(SHEET_NAME); }
+        else sheet = spreadsheet.insertSheet(SHEET_NAME);
+      }
       if (sheet.getLastRow() === 0) {
         sheet.appendRow(HEADERS);
         sheet.setFrozenRows(1);
