@@ -24,18 +24,59 @@ const SpeechRecognition=window.SpeechRecognition||window.webkitSpeechRecognition
 if(!SpeechRecognition){micButton.disabled=true;micStatus.textContent='Voice input is not supported in this browser. You can type the fault description.';}
 else{micButton.addEventListener('click',()=>{const recognition=new SpeechRecognition();recognition.lang='en-IN';recognition.interimResults=false;recognition.maxAlternatives=1;micStatus.textContent='Listening… please describe the appliance fault.';micButton.disabled=true;recognition.onresult=event=>{const spoken=event.results[0][0].transcript;problemField.value=(problemField.value.trim()?problemField.value.trim()+' ':'')+spoken;micStatus.textContent='Voice description added. You can edit it before submitting.';};recognition.onerror=()=>{micStatus.textContent='Could not capture speech. Check microphone permission or type the description.';};recognition.onend=()=>{micButton.disabled=false;if(micStatus.textContent==='Listening… please describe the appliance fault.')micStatus.textContent='Tap to try again, or type the fault description.';};recognition.start();});}
 document.getElementById('new-enquiry').addEventListener('click',()=>{form.classList.remove('submitted');document.getElementById('thank-you-screen').hidden=true;form.reset();document.getElementById('form-heading').textContent='Repair enquiry';form.dataset.intent='repair';document.getElementById('form-status').textContent='';updateFormHeading();});
+async function postEnquiryToSheet(endpoint, record, onSuccess, onFailure){
+ const frame=document.createElement('iframe');
+ frame.name='hrh-sheet-response-'+Date.now();
+ frame.title='Customer enquiry storage response';
+ frame.hidden=true;
+ document.body.appendChild(frame);
+ const postForm=document.createElement('form');
+ postForm.method='POST';postForm.action=endpoint;postForm.target=frame.name;postForm.hidden=true;
+ const payload=document.createElement('input');payload.type='hidden';payload.name='payload';payload.value=JSON.stringify(record);
+ const trap=document.createElement('input');trap.type='hidden';trap.name='website';trap.value='';
+ postForm.append(payload,trap);document.body.appendChild(postForm);
+ let finished=false;
+ const cleanup=()=>{window.removeEventListener('message',receive);postForm.remove();setTimeout(()=>frame.remove(),1000);};
+ const receive=(event)=>{
+  if(event.source!==frame.contentWindow||!event.data||event.data.type!=='hrh-sheet-result')return;
+  finished=true;cleanup();
+  if(event.data.ok)onSuccess(event.data);else onFailure(event.data.message||'The customer enquiry could not be saved to the sheet.');
+ };
+ window.addEventListener('message',receive);
+ postForm.submit();
+ setTimeout(()=>{if(!finished){cleanup();onFailure('No confirmation came back from Google Sheets. Check the web-app deployment and try again.');}},20000);
+}
 form.addEventListener('submit',async e=>{
- e.preventDefault();const status=document.getElementById('form-status'),cfg=window.HOME_REPAIR_CONFIG||{},phone=String(cfg.businessPhone||'').replace(/\D/g,'');
- const chosen=[...form.querySelectorAll('input[name="appliances"]:checked')].map(x=>x.value);if(!chosen.length){status.textContent='Please select at least one appliance or spare-parts enquiry.';form.querySelector('.appliance-options').scrollIntoView({behavior:'smooth',block:'center'});return;}
+ e.preventDefault();
+ const status=document.getElementById('form-status'),cfg=window.HOME_REPAIR_CONFIG||{},phone=String(cfg.businessPhone||'').replace(/\D/g,''),endpoint=String(cfg.googleSheetsEndpoint||'').trim();
+ const chosen=[...form.querySelectorAll('input[name="appliances"]:checked')].map(x=>x.value);
+ if(!chosen.length){status.textContent='Please select at least one appliance or spare-parts enquiry.';form.querySelector('.appliance-options').scrollIntoView({behavior:'smooth',block:'center'});return;}
  const mobile=form.querySelector('[name="phone"]');if(!/^\d{10}$/.test(mobile.value)){mobile.setCustomValidity('Enter exactly 10 digits.');mobile.reportValidity();mobile.setCustomValidity('');return;}
  const pin=form.querySelector('[name="pin"]');if(!/^\d{6}$/.test(pin.value)){pin.setCustomValidity('Enter exactly 6 digits.');pin.reportValidity();pin.setCustomValidity('');return;}
  if(phone.length<10||String(cfg.businessPhone).includes('REPLACE_')){status.textContent='Setup needed: enter your business WhatsApp number in config.js before submitting.';return;}
- const f=new FormData(form),hasSpares=chosen.includes('Spare parts enquiry'),repairAppliances=chosen.filter(x=>x!=='Spare parts enquiry');const enquiryType=hasSpares&&!repairAppliances.length?'SPARES SALES ENQUIRY':(hasSpares?'REPAIR + SPARES SALES ENQUIRY':'REPAIR ENQUIRY');const headline=hasSpares&&!repairAppliances.length?'SPARES SALES ENQUIRY':`${repairAppliances.join(' + ')} — REPAIR ENQUIRY${hasSpares?' + SPARES SALES ENQUIRY':''}`;const submittedAt=new Date();
- const record={submittedAt:submittedAt.toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'}),enquiryType,headline,name:f.get('name'),phone:f.get('phone'),appliances:chosen.join(', '),brands:f.get('brands')||'Not specified',warranty:f.get('warranty'),warrantyConfirmation:f.get('warrantyConfirm'),problem:f.get('problem'),zone:f.get('zone'),area:f.get('area'),pin:f.get('pin'),fullAddress:f.get('address'),preferredTime:f.get('time')};
- const msg=[`HomeRepairsHub — ${headline}`,`Submitted on: ${record.submittedAt}`,`Customer name: ${record.name}`,`Customer mobile: ${record.phone}`,`Appliance(s): ${record.appliances}`,`Brand(s): ${record.brands}`,`Warranty status: ${record.warranty}`,`Warranty confirmation: ${record.warrantyConfirmation}`,`Fault / request: ${record.problem}`,`Service zone: ${record.zone}`,`Area: ${record.area}`,`PIN code: ${record.pin}`,`Full service address: ${record.fullAddress}`,`Preferred visit time: ${record.preferredTime}`].join('\n');
- // Open WhatsApp synchronously from the submit gesture to reduce popup blocking.
- const whatsappWindow=window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`,'_blank','noopener,noreferrer');
- // Customer-data storage is intentionally paused until a reliable backend is configured.
- form.classList.add('submitted');document.getElementById('thank-you-screen').hidden=false;status.textContent='';document.getElementById('thank-you-screen').scrollIntoView({behavior:'smooth',block:'center'});
- if(!whatsappWindow)status.textContent='WhatsApp may have been blocked by your browser. Allow pop-ups and submit again to share your enquiry.';
+ if(!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec(?:\?.*)?$/.test(endpoint)){status.textContent='Google Sheets storage is not connected yet. Complete the one-time setup in SHEET_SETUP.md before accepting enquiries.';return;}
+ const f=new FormData(form),hasSpares=chosen.includes('Spare parts enquiry'),repairAppliances=chosen.filter(x=>x!=='Spare parts enquiry');
+ const enquiryType=hasSpares&&!repairAppliances.length?'SPARES SALES ENQUIRY':(hasSpares?'REPAIR + SPARES SALES ENQUIRY':'REPAIR ENQUIRY');
+ const headline=hasSpares&&!repairAppliances.length?'SPARES SALES ENQUIRY':`${repairAppliances.join(' + ')} — REPAIR ENQUIRY${hasSpares?' + SPARES SALES ENQUIRY':''}`;
+ const submittedAt=new Date().toISOString();
+ const record={submittedAt,enquiryType,headline,name:f.get('name'),phone:f.get('phone'),appliances:chosen.join(', '),brands:f.get('brands')||'Not specified',warranty:f.get('warranty'),warrantyConfirmation:f.get('warrantyConfirm'),problem:f.get('problem'),zone:f.get('zone'),area:f.get('area'),pin:f.get('pin'),fullAddress:f.get('address'),preferredTime:f.get('time'),website:f.get('website')||''};
+ status.textContent='Saving your enquiry to the customer sheet…';
+ const whatsappWindow=window.open('about:blank','_blank');
+ postEnquiryToSheet(endpoint,record,(result)=>{
+  form.classList.add('submitted');document.getElementById('thank-you-screen').hidden=false;
+  status.textContent='Enquiry saved successfully to the customer sheet.';
+  const small=document.querySelector('.thank-small');
+  small.innerHTML='Your details are saved. WhatsApp is an additional notification; press <b>Send</b> in the new tab to message our team.';
+  if(whatsappWindow){
+   const msg=[`HomeRepairsHub — ${headline}`,`Submitted on: ${new Date(submittedAt).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'})`,`Customer name: ${record.name}`,`Customer mobile: ${record.phone}`,`Appliance(s): ${record.appliances}`,`Brand(s): ${record.brands}`,`Warranty status: ${record.warranty}`,`Warranty confirmation: ${record.warrantyConfirmation}`,`Fault / request: ${record.problem}`,`Service zone: ${record.zone}`,`Area: ${record.area}`,`PIN code: ${record.pin}`,`Full service address: ${record.fullAddress}`,`Preferred visit time: ${record.preferredTime}`].join('\n');
+   whatsappWindow.location.href=`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+  }else{
+   status.textContent='Enquiry saved successfully. Your browser blocked the WhatsApp tab; you can still contact our team separately.';
+  }
+  document.getElementById('thank-you-screen').scrollIntoView({behavior:'smooth',block:'center'});
+ },(message)=>{
+  if(whatsappWindow)whatsappWindow.close();
+  status.textContent=message+' Your enquiry has not been confirmed as saved; please try again.';
+ });
 });
+
