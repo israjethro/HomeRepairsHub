@@ -15,10 +15,38 @@ const storageNotice=document.getElementById('form-disclaimer');
 if(storageNotice&&/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec(?:\?.*)?$/.test(String(storageConfig.googleSheetsEndpoint||''))){
  storageNotice.textContent='Your enquiry is saved to our customer enquiry sheet before confirmation. WhatsApp is an additional notification.';
 }
-function updateFormHeading(){const selected=[...form.querySelectorAll('input[name="appliances"]:checked')].map(x=>x.value);const spares=selected.includes('Spare parts enquiry');const repairAppliances=selected.filter(x=>x!=='Spare parts enquiry');document.getElementById('form-heading').textContent=spares&&!repairAppliances.length?'Spare parts enquiry':'Repair enquiry';form.dataset.intent=spares&&!repairAppliances.length?'spares':'repair';}
+const brandChoices=['A.O. Smith','Blue Star','Bosch','Carrier','Daikin','Godrej','Haier','Hitachi','IFB','LG','Mi / Xiaomi','Onida','Panasonic','Samsung','Voltas','Whirlpool'];
+function selectedAppliances(){return [...form.querySelectorAll('input[name="appliances"]:checked')].map(x=>x.value);}
+function renderBrandGroups(){
+ const root=document.getElementById('brand-groups'),help=document.getElementById('brand-picker-help');
+ const selected=selectedAppliances();
+ const current=new Set([...root.querySelectorAll('input[name="brands"]:checked')].map(x=>x.dataset.appliance+'::'+x.value));
+ const groups=selected.map(x=>x==='Spare parts enquiry'?'Spare parts':x);
+ root.innerHTML='';
+ if(!groups.length){help.hidden=false;root.hidden=true;return;}
+ help.hidden=true;root.hidden=false;
+ root.innerHTML=groups.map(appliance=>'<fieldset class="brand-appliance-group"><legend>'+appliance+'</legend><div class="brand-check-grid">'+brandChoices.map(brand=>'<label class="brand-check-option"><input type="checkbox" name="brands" value="'+brand+'" data-appliance="'+appliance+'"><span>'+brand+'</span></label>').join('')+'</div></fieldset>').join('');
+ root.querySelectorAll('input[name="brands"]').forEach(input=>{input.checked=current.has(input.dataset.appliance+'::'+input.value);});
+}
+function collectSelectedBrands(){
+ const groups={};
+ form.querySelectorAll('input[name="brands"]:checked').forEach(input=>{
+  const appliance=input.dataset.appliance||'Appliance';
+  if(!groups[appliance])groups[appliance]=[];
+  groups[appliance].push(input.value);
+ });
+ return Object.entries(groups).map(([appliance,brands])=>appliance+': '+brands.join(', ')).join('; ')||'Not specified';
+}
+function updateFormHeading(){
+ const selected=selectedAppliances(),spares=selected.includes('Spare parts enquiry'),repairAppliances=selected.filter(x=>x!=='Spare parts enquiry');
+ document.getElementById('form-heading').textContent=spares&&!repairAppliances.length?'Spare parts enquiry':'Repair enquiry';
+ form.dataset.intent=spares&&!repairAppliances.length?'spares':'repair';
+ renderBrandGroups();
+}
 function selectAppliance(value){if(!value)return;const check=[...form.querySelectorAll('input[name="appliances"]')].find(x=>x.value===value);if(check)check.checked=true;updateFormHeading();}
 document.addEventListener('click',e=>{const service=e.target.closest('[data-appliance]');if(service){selectAppliance(service.dataset.appliance);if(service.dataset.intent==='spares'){const check=[...form.querySelectorAll('input[name="appliances"]')].find(x=>x.value==='Spare parts enquiry');if(check)check.checked=true;selectAppliance('Spare parts enquiry');}}const area=e.target.closest('[data-area]');if(area){document.querySelector('[name="area"]').value=area.dataset.area;document.querySelector('[name="pin"]').value=area.dataset.pin;const z=Object.entries(zones).find(([,v])=>v.areas.some(a=>a[0]===area.dataset.area));if(z)document.getElementById('zone-select').value=({north:'North Chennai',central:'Central Chennai',west:'West Chennai',south:'South Chennai',omr:'OMR corridor'})[z[0]];}});
 form.querySelectorAll('input[name="appliances"]').forEach(x=>x.addEventListener('change',updateFormHeading));
+renderBrandGroups();
 const toggle=document.querySelector('.menu-toggle'),nav=document.getElementById('nav');toggle.addEventListener('click',()=>{const open=nav.classList.toggle('open');toggle.setAttribute('aria-expanded',String(open));});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');toggle.setAttribute('aria-expanded','false');}));
 document.getElementById('year').textContent=new Date().getFullYear();
 // Numeric-only fields: maxlength and HTML validation remain as a second layer.
@@ -66,7 +94,7 @@ form.addEventListener('submit',async e=>{
  const enquiryType=hasSpares&&!repairAppliances.length?'SPARES SALES ENQUIRY':(hasSpares?'REPAIR + SPARES SALES ENQUIRY':'REPAIR ENQUIRY');
  const headline=hasSpares&&!repairAppliances.length?'SPARES SALES ENQUIRY':`${repairAppliances.join(' + ')} — REPAIR ENQUIRY${hasSpares?' + SPARES SALES ENQUIRY':''}`;
  const submittedAt=new Date().toISOString();
- const record={submittedAt,enquiryType,headline,name:f.get('name'),phone:f.get('phone'),appliances:chosen.join(', '),brands:f.get('brands')||'Not specified',warranty:f.get('warranty'),warrantyConfirmation:f.get('warrantyConfirm'),problem:f.get('problem'),zone:f.get('zone'),area:f.get('area'),pin:f.get('pin'),fullAddress:f.get('address'),preferredTime:f.get('time'),website:f.get('website')||''};
+ const record={submittedAt,enquiryType,headline,name:f.get('name'),phone:f.get('phone'),appliances:chosen.join(', '),brands:collectSelectedBrands(),warranty:f.get('warranty'),warrantyConfirmation:f.get('warrantyConfirm'),problem:f.get('problem'),zone:f.get('zone'),area:f.get('area'),pin:f.get('pin'),fullAddress:f.get('address'),preferredTime:f.get('time'),website:f.get('website')||''};
  status.textContent='Saving your enquiry to the customer sheet…';
  const whatsappWindow=window.open('about:blank','_blank');
  postEnquiryToSheet(endpoint,record,(result)=>{
