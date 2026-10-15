@@ -1,5 +1,6 @@
-// HomeRepairHub public website settings.
-// Customer-data storage is intentionally paused until a reliable backend is configured.
+// HomeRepairsHub public website settings.
+// Deploy the Apps Script in SHEET_SETUP.md, then paste its Web App /exec URL below.
 window.HOME_REPAIR_CONFIG = {
-  businessPhone: "918681918830"
+  businessPhone: "918681918830",
+  googleSheetsEndpoint: ""
 };
