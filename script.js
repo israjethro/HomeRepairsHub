@@ -26,19 +26,19 @@ else{micButton.addEventListener('click',()=>{const recognition=new SpeechRecogni
 document.getElementById('new-enquiry').addEventListener('click',()=>{form.classList.remove('submitted');document.getElementById('thank-you-screen').hidden=true;form.reset();document.getElementById('form-heading').textContent='Repair enquiry';form.dataset.intent='repair';document.getElementById('form-status').textContent='';updateFormHeading();});
 async function postEnquiryToSheet(endpoint, record, onSuccess, onFailure){
  const frame=document.createElement('iframe');
- frame.name='hrh-sheet-response-'+Date.now();
+ const requestId=(window.crypto&&crypto.randomUUID)?crypto.randomUUID():String(Date.now())+'-'+Math.random().toString(36).slice(2);\n frame.name='hrh-sheet-response-'+requestId;
  frame.title='Customer enquiry storage response';
  frame.hidden=true;
  document.body.appendChild(frame);
  const postForm=document.createElement('form');
  postForm.method='POST';postForm.action=endpoint;postForm.target=frame.name;postForm.hidden=true;
- const payload=document.createElement('input');payload.type='hidden';payload.name='payload';payload.value=JSON.stringify(record);
+ record.requestId=requestId;\n const payload=document.createElement('input');payload.type='hidden';payload.name='payload';payload.value=JSON.stringify(record);
  const trap=document.createElement('input');trap.type='hidden';trap.name='website';trap.value='';
  postForm.append(payload,trap);document.body.appendChild(postForm);
  let finished=false;
  const cleanup=()=>{window.removeEventListener('message',receive);postForm.remove();setTimeout(()=>frame.remove(),1000);};
  const receive=(event)=>{
-  if(event.source!==frame.contentWindow||!event.data||event.data.type!=='hrh-sheet-result')return;
+  if(!event.data||event.data.type!=='hrh-sheet-result'||event.data.requestId!==requestId)return;
   finished=true;cleanup();
   if(event.data.ok)onSuccess(event.data);else onFailure(event.data.message||'The customer enquiry could not be saved to the sheet.');
  };
@@ -68,7 +68,7 @@ form.addEventListener('submit',async e=>{
   const small=document.querySelector('.thank-small');
   small.innerHTML='Your details are saved. WhatsApp is an additional notification; press <b>Send</b> in the new tab to message our team.';
   if(whatsappWindow){
-   const msg=[`HomeRepairsHub — ${headline}`,`Submitted on: ${new Date(submittedAt).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'})`,`Customer name: ${record.name}`,`Customer mobile: ${record.phone}`,`Appliance(s): ${record.appliances}`,`Brand(s): ${record.brands}`,`Warranty status: ${record.warranty}`,`Warranty confirmation: ${record.warrantyConfirmation}`,`Fault / request: ${record.problem}`,`Service zone: ${record.zone}`,`Area: ${record.area}`,`PIN code: ${record.pin}`,`Full service address: ${record.fullAddress}`,`Preferred visit time: ${record.preferredTime}`].join('\n');
+   const msg=[`HomeRepairsHub — ${headline}`,`Submitted on: ${new Date(submittedAt).toLocaleString('en-IN',{dateStyle:'medium',timeStyle:'short'})}`,`Customer name: ${record.name}`,`Customer mobile: ${record.phone}`,`Appliance(s): ${record.appliances}`,`Brand(s): ${record.brands}`,`Warranty status: ${record.warranty}`,`Warranty confirmation: ${record.warrantyConfirmation}`,`Fault / request: ${record.problem}`,`Service zone: ${record.zone}`,`Area: ${record.area}`,`PIN code: ${record.pin}`,`Full service address: ${record.fullAddress}`,`Preferred visit time: ${record.preferredTime}`].join('\n');
    whatsappWindow.location.href=`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
   }else{
    status.textContent='Enquiry saved successfully. Your browser blocked the WhatsApp tab; you can still contact our team separately.';
