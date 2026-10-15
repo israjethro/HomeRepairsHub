@@ -3,5 +3,5 @@
 // Staging refresh: finalized HRH logo, new appliance lineup, and Google Sheets capture flow.
 window.HOME_REPAIR_CONFIG = {
   businessPhone: "918681918830",
-  googleSheetsEndpoint: "https://script.google.com/macros/s/AKfycbzfkDqATnJfiZBKK2JWbV6dMxfaZT4TV3y9-TDgjaNaYE66YoBhg8HNFp-RkMEyghs/exec"
+  googleSheetsEndpoint: "https://script.google.com/macros/s/AKfycbzIx3ejkXjb48N4HDnDeZRTCjKb40Gq9eK0gFKNxf4-e_Oalq-4IvXIv0PG65NIFmA/exec"
 };
