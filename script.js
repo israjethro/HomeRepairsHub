@@ -21,7 +21,7 @@ function renderBrandGroups(){
  const root=document.getElementById('brand-groups'),help=document.getElementById('brand-picker-help');
  const selected=selectedAppliances();
  const current=new Set([...root.querySelectorAll('input[name="brands"]:checked')].map(x=>x.dataset.appliance+'::'+x.value));
- const groups=selected.map(x=>x==='Spare parts enquiry'?'Spare parts':x);
+ const groups=selected.map(x=>(x==='Spare parts enquiry'||x==='Spares + installation enquiry')?'Spare parts':x);
  root.innerHTML='';
  if(!groups.length){help.hidden=false;root.hidden=true;return;}
  help.hidden=true;root.hidden=false;
@@ -37,14 +37,22 @@ function collectSelectedBrands(){
  });
  return Object.entries(groups).map(([appliance,brands])=>appliance+': '+brands.join(', ')).join('; ')||'Not specified';
 }
+const SPARES_ONLY_OPTIONS=['Spare parts enquiry','Spares + installation enquiry'];
 function updateFormHeading(){
- const selected=selectedAppliances(),spares=selected.includes('Spare parts enquiry'),repairAppliances=selected.filter(x=>x!=='Spare parts enquiry');
- document.getElementById('form-heading').textContent=spares&&!repairAppliances.length?'Spare parts enquiry':'Repair enquiry';
- form.dataset.intent=spares&&!repairAppliances.length?'spares':'repair';
+ const selected=selectedAppliances();
+ const hasSpares=selected.includes('Spare parts enquiry');
+ const hasInstall=selected.includes('Spares + installation enquiry');
+ const repairAppliances=selected.filter(x=>!SPARES_ONLY_OPTIONS.includes(x));
+ let heading='Repair enquiry';
+ if(!repairAppliances.length) heading=hasInstall?'Spares + installation enquiry':(hasSpares?'Spares enquiry':'Repair enquiry');
+ else if(hasInstall) heading='Repair + spares + installation enquiry';
+ else if(hasSpares) heading='Repair + spares enquiry';
+ document.getElementById('form-heading').textContent=heading;
+ form.dataset.intent=hasInstall?'spares-installation':(hasSpares?'spares':'repair');
  renderBrandGroups();
 }
 function selectAppliance(value){if(!value)return;const check=[...form.querySelectorAll('input[name="appliances"]')].find(x=>x.value===value);if(check)check.checked=true;updateFormHeading();}
-document.addEventListener('click',e=>{const service=e.target.closest('[data-appliance]');if(service){selectAppliance(service.dataset.appliance);if(service.dataset.intent==='spares'){const check=[...form.querySelectorAll('input[name="appliances"]')].find(x=>x.value==='Spare parts enquiry');if(check)check.checked=true;selectAppliance('Spare parts enquiry');}}const area=e.target.closest('[data-area]');if(area){document.querySelector('[name="area"]').value=area.dataset.area;document.querySelector('[name="pin"]').value=area.dataset.pin;const z=Object.entries(zones).find(([,v])=>v.areas.some(a=>a[0]===area.dataset.area));if(z)document.getElementById('zone-select').value=({north:'North Chennai',central:'Central Chennai',west:'West Chennai',south:'South Chennai',omr:'OMR corridor'})[z[0]];}});
+document.addEventListener('click',e=>{const service=e.target.closest('[data-appliance]');if(service){selectAppliance(service.dataset.appliance);if(service.dataset.intent==='spares-installation')selectAppliance('Spares + installation enquiry');else if(service.dataset.intent==='spares')selectAppliance('Spare parts enquiry');}const area=e.target.closest('[data-area]');if(area){document.querySelector('[name="area"]').value=area.dataset.area;document.querySelector('[name="pin"]').value=area.dataset.pin;const z=Object.entries(zones).find(([,v])=>v.areas.some(a=>a[0]===area.dataset.area));if(z)document.getElementById('zone-select').value=({north:'North Chennai',central:'Central Chennai',west:'West Chennai',south:'South Chennai',omr:'OMR corridor'})[z[0]];}});
 form.querySelectorAll('input[name="appliances"]').forEach(x=>x.addEventListener('change',updateFormHeading));
 renderBrandGroups();
 const toggle=document.querySelector('.menu-toggle'),nav=document.getElementById('nav');toggle.addEventListener('click',()=>{const open=nav.classList.toggle('open');toggle.setAttribute('aria-expanded',String(open));});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');toggle.setAttribute('aria-expanded','false');}));
@@ -90,10 +98,10 @@ form.addEventListener('submit',async e=>{
  const pin=form.querySelector('[name="pin"]');if(!/^\d{6}$/.test(pin.value)){pin.setCustomValidity('Enter exactly 6 digits.');pin.reportValidity();pin.setCustomValidity('');return;}
  if(phone.length<10||String(cfg.businessPhone).includes('REPLACE_')){status.textContent='Setup needed: enter your business WhatsApp number in config.js before submitting.';return;}
  if(!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec(?:\?.*)?$/.test(endpoint)){status.textContent='Google Sheets storage is not connected yet. Complete the one-time setup in SHEET_SETUP.md before accepting enquiries.';return;}
- const f=new FormData(form),hasSpares=chosen.includes('Spare parts enquiry'),repairAppliances=chosen.filter(x=>x!=='Spare parts enquiry');
- const enquiryType=hasSpares&&!repairAppliances.length?'SPARES SALES ENQUIRY':(hasSpares?'REPAIR + SPARES SALES ENQUIRY':'REPAIR ENQUIRY');
- const headline=hasSpares&&!repairAppliances.length?'SPARES SALES ENQUIRY':`${repairAppliances.join(' + ')} — REPAIR ENQUIRY${hasSpares?' + SPARES SALES ENQUIRY':''}`;
- const submittedAt=new Date().toISOString();
+ const f=new FormData(form),hasSpares=chosen.includes('Spare parts enquiry'),hasInstall=chosen.includes('Spares + installation enquiry'),repairAppliances=chosen.filter(x=>!SPARES_ONLY_OPTIONS.includes(x));
+  const enquiryType=(!repairAppliances.length&&hasInstall)?'SPARES + INSTALLATION ENQUIRY':(!repairAppliances.length&&hasSpares)?'SPARES ENQUIRY':(hasInstall?'REPAIR + SPARES + INSTALLATION ENQUIRY':(hasSpares?'REPAIR + SPARES ENQUIRY':'REPAIR ENQUIRY'));
+  const headline=(!repairAppliances.length&&hasInstall)?'SPARES + INSTALLATION ENQUIRY':(!repairAppliances.length&&hasSpares)?'SPARES ENQUIRY':`${repairAppliances.join(' + ')} — REPAIR ENQUIRY${hasInstall?' + SPARES + INSTALLATION ENQUIRY':(hasSpares?' + SPARES ENQUIRY':'')}`;
+  const submittedAt=new Date().toISOString();
  const record={submittedAt,enquiryType,headline,name:f.get('name'),phone:f.get('phone'),appliances:chosen.join(', '),brands:collectSelectedBrands(),warranty:f.get('warranty'),warrantyConfirmation:f.get('warrantyConfirm'),problem:f.get('problem'),zone:f.get('zone'),area:f.get('area'),pin:f.get('pin'),fullAddress:f.get('address'),preferredTime:f.get('time'),website:f.get('website')||''};
  status.textContent='Saving your enquiry to the customer sheet…';
  const whatsappWindow=window.open('about:blank','_blank');
