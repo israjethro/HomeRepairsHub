@@ -21,7 +21,7 @@ function renderBrandGroups(){
  const root=document.getElementById('brand-groups'),help=document.getElementById('brand-picker-help');
  const selected=selectedAppliances();
  const current=new Set([...root.querySelectorAll('input[name="brands"]:checked')].map(x=>x.dataset.appliance+'::'+x.value));
- const groups=selected.map(x=>(x==='Spare parts enquiry'||x==='Spares + installation enquiry')?'Spare parts':x);
+ const groups=[...new Set(selected.map(x=>(x==='Spare parts enquiry'||x==='Spares + installation enquiry')?'Spare parts':x))];
  root.innerHTML='';
  if(!groups.length){help.hidden=false;root.hidden=true;return;}
  help.hidden=true;root.hidden=false;
