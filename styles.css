@@ -218,3 +218,45 @@ footer .brand-copy small{color:#526b79}
  .footer-cta-row{display:grid;grid-template-columns:1fr;width:100%}
  .footer-cta-row .footer-link{width:100%;min-height:46px}
 }
+
+
+/* Two-colour CTA system: blue call buttons, orange hover; orange actions, blue hover */
+:root{--blue:#0868cf;--blue-hover:#ff790b}
+.btn{transition:background-color .2s,color .2s,border-color .2s,transform .2s,box-shadow .2s}
+.btn-orange{background:var(--orange);border:1px solid var(--orange);color:#10202c}
+.btn-orange:hover,.btn-orange:focus-visible{background:var(--blue);border-color:var(--blue);color:#fff;transform:translateY(-2px);box-shadow:0 8px 20px #0868cf28}
+.btn-blue,.call-cta{background:var(--blue);border:1px solid var(--blue);color:#fff!important}
+.btn-blue:hover,.btn-blue:focus-visible,.call-cta:hover,.call-cta:focus-visible{background:var(--orange)!important;border-color:var(--orange)!important;color:#10202c!important;transform:translateY(-2px);box-shadow:0 8px 20px #ff790b30}
+.nav-call-cta{background:var(--blue)!important;color:#fff!important;border:1px solid var(--blue)}
+.nav-call-cta:hover{background:var(--orange)!important;border-color:var(--orange)!important;color:#10202c!important}
+.footer-call-link{background:var(--blue)!important;border:1px solid var(--blue)!important;color:#fff!important;border-radius:999px;padding:11px 17px;box-shadow:0 5px 14px #0868cf20}
+.footer-call-link:hover{background:var(--orange)!important;border-color:var(--orange)!important;color:#10202c!important}
+.hero-actions .btn-orange{background:var(--orange);color:#10202c}
+.hero-actions .btn-blue{background:var(--blue);color:#fff}
+.btn-dark{background:var(--blue);border:1px solid var(--blue);color:#fff}
+.btn-dark:hover,.btn-dark:focus-visible{background:var(--orange);border-color:var(--orange);color:#10202c;transform:translateY(-2px)}
+.btn-outline:hover,.btn-outline:focus-visible{background:var(--orange);border-color:var(--orange);color:#10202c;transform:translateY(-2px)}
+/* Link hover colour is the inverse brand colour */
+a:not(.btn):not(.brand):not(.floating-enquiry):hover,
+a:not(.btn):not(.brand):not(.floating-enquiry):focus-visible{color:var(--blue)!important;text-decoration-color:currentColor}
+nav a.nav-call-cta:hover,footer a.footer-call-link:hover{color:#10202c!important}
+.service-card>a,.area-card a,.coverage-cta a{transition:color .2s,background-color .2s,border-color .2s,transform .2s}
+.service-card>a:hover,.area-card a:hover,.coverage-cta a:hover{color:var(--blue)!important}
+.coverage-cta a{font-size:10px;padding:9px 14px;gap:6px}
+.area-card a{font-size:9px;line-height:1.35;margin-top:7px}
+.contact-call-panel>b{color:var(--orange)}
+.contact-call-panel>span{color:#b9d9ff}
+.contact-call-panel .btn{background:var(--blue);border-color:var(--blue);color:#fff}
+.contact-call-panel .btn:hover{background:var(--orange);border-color:var(--orange);color:#10202c}
+.zone-tab{transition:background-color .2s,color .2s,border-color .2s}
+.zone-tab.active,.zone-tab:hover,.zone-tab:focus-visible{background:var(--blue);border-color:var(--blue);color:#fff}
+.check-option,.brand-check-option{transition:border-color .2s,background-color .2s,color .2s}
+.check-option:hover,.brand-check-option:hover{border-color:var(--blue);background:#eef6ff}
+.floating-whatsapp.floating-enquiry{background:var(--orange);color:#10202c;transition:background-color .2s,color .2s,transform .2s}
+.floating-whatsapp.floating-enquiry:hover{background:var(--blue);color:#fff!important;transform:translateY(-2px)}
+button:focus-visible,a:focus-visible{outline:3px solid #0868cf;outline-offset:3px}
+@media(max-width:680px){
+ .footer-cta-row .footer-call-link{border-radius:999px;min-height:46px}
+ .hero-actions .btn-blue{background:var(--blue)}
+ .hero-actions .btn-blue:hover{background:var(--orange)}
+}
