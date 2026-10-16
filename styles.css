@@ -260,3 +260,7 @@ button:focus-visible,a:focus-visible{outline:3px solid #0868cf;outline-offset:3p
  .hero-actions .btn-blue{background:var(--blue)}
  .hero-actions .btn-blue:hover{background:var(--orange)}
 }
+
+@media(max-width:680px){
+ .footer-cta-row .footer-link:hover,.footer-cta-row .footer-link:focus-visible{background:var(--orange)!important;border-color:var(--orange)!important;color:#10202c!important}
+}
