@@ -264,3 +264,44 @@ button:focus-visible,a:focus-visible{outline:3px solid #0868cf;outline-offset:3p
 @media(max-width:680px){
  .footer-cta-row .footer-link:hover,.footer-cta-row .footer-link:focus-visible{background:var(--orange)!important;border-color:var(--orange)!important;color:#10202c!important}
 }
+
+
+/* HomeRepairsHub brand colour alignment */
+:root{--navy:#073568;--navy2:#0a417c;--orange:#ff8a00;--blue:#073568;--blue-hover:#073568}
+.site-header{position:sticky;top:0;z-index:100;background:#fff;color:var(--navy);border-bottom:1px solid #dfe5e7}
+.site-header .brand-copy b span{color:var(--orange)}
+.nav-cta{background:var(--orange);color:var(--navy)!important}
+.nav-cta:hover,.nav-cta:focus-visible{background:var(--navy)!important;border-color:var(--navy)!important;color:#fff!important}
+.btn-orange,.floating-whatsapp.floating-enquiry{background:var(--orange);border-color:var(--orange);color:var(--navy)}
+.btn-orange:hover,.btn-orange:focus-visible,.btn-dark:hover,.btn-dark:focus-visible,.floating-whatsapp.floating-enquiry:hover{background:var(--navy)!important;border-color:var(--navy)!important;color:#fff!important;box-shadow:0 8px 20px #07356828}
+.btn-blue,.call-cta,.nav-call-cta,.footer-call-link,.btn-dark{background:var(--navy)!important;border-color:var(--navy)!important;color:#fff!important}
+.btn-blue:hover,.btn-blue:focus-visible,.call-cta:hover,.call-cta:focus-visible,.nav-call-cta:hover,.footer-call-link:hover{background:var(--orange)!important;border-color:var(--orange)!important;color:var(--navy)!important}
+.btn-outline{border-color:var(--navy);color:var(--navy)}
+.btn-outline:hover,.btn-outline:focus-visible{background:var(--navy)!important;border-color:var(--navy)!important;color:#fff!important}
+.zone-tab.active,.zone-tab:hover,.zone-tab:focus-visible{background:var(--navy);border-color:var(--navy);color:#fff}
+.coverage-cta a{background:var(--orange);border-color:var(--orange);color:var(--navy)!important}
+.coverage-cta a:hover,.coverage-cta a:focus-visible{background:var(--navy);border-color:var(--navy);color:#fff!important}
+.service-card>a:hover,.area-card a:hover{color:var(--navy)!important}
+a:not(.btn):not(.brand):not(.floating-enquiry):hover,
+a:not(.btn):not(.brand):not(.floating-enquiry):focus-visible{color:var(--navy)!important}
+.contact-call-panel{background:#fff;border:1px solid #d6e0e8;box-shadow:0 8px 24px #0735680b}
+.contact-call-panel>b{font-size:14px;font-weight:800;color:var(--navy)}
+.contact-call-panel>span{font-size:13px;font-weight:600;line-height:1.55;color:#263746}
+.contact-call-panel .btn{background:var(--navy);border-color:var(--navy);color:#fff}
+.contact-call-panel .btn:hover,.contact-call-panel .btn:focus-visible{background:var(--orange);border-color:var(--orange);color:var(--navy)}
+.check-option:hover,.brand-check-option:hover{border-color:var(--navy);background:#eef3f8}
+button:focus-visible,a:focus-visible{outline:3px solid var(--navy);outline-offset:3px}
+.mobile-call-strip{display:none}
+@media(max-width:680px){
+ .site-header{position:sticky;top:0;z-index:101;height:74px}
+ .mobile-call-strip{position:sticky;top:74px;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:48px;padding:8px 18px;background:var(--navy);color:#fff;box-shadow:0 4px 12px #071c3020}
+ .mobile-call-strip>span{font-size:11px;font-weight:700;color:#fff}
+ .mobile-call-strip a{display:inline-flex;align-items:center;justify-content:center;gap:8px;color:#fff!important;font-size:13px;font-weight:800;white-space:nowrap}
+ .mobile-call-strip a:hover,.mobile-call-strip a:focus-visible{color:var(--orange)!important}
+ .mobile-call-strip svg{flex:0 0 auto}
+ .hero{scroll-margin-top:130px}
+ .btn-orange:hover,.btn-orange:focus-visible,.btn-dark:hover,.btn-dark:focus-visible,.floating-whatsapp.floating-enquiry:hover{background:var(--navy)!important;border-color:var(--navy)!important;color:#fff!important}
+ .contact-call-panel{padding:16px}
+ .contact-call-panel>b{font-size:14px;color:var(--navy)}
+ .contact-call-panel>span{font-size:13px;color:#263746}
+}
