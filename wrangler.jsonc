@@ -1,0 +1,10 @@
+{
+  "$schema": "https://developers.cloudflare.com/workers/wrangler/config-schema.json",
+  "name": "homerepairhub",
+  "compatibility_date": "2026-10-15",
+  "assets": {
+    "directory": "./"
+  },
+  "preview_urls": true,
+  "previews": {}
+}
